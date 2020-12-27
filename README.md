@@ -6,6 +6,11 @@
 
 A collection of traits to define a common interface across reactors
 
+## Available implementations
+
+- [async-io](https://crates.io/crates/async-reactor-trait) - Also works with async-std.
+- [tokio](https://crates.io/crates/tokio-reactor-trait)
+
 ## License
 
 Licensed under either of
