@@ -105,6 +105,7 @@ mod sys {
 
 #[cfg(windows)]
 mod sys {
+    use crate::IOHandle;
     use std::{
         io::{Read, Write},
         os::windows::io::{AsRawSocket, RawSocket},
