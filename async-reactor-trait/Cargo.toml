@@ -1,0 +1,21 @@
+[package]
+name = "async-reactor-trait"
+version = "0.0.0"
+authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
+description =  "reactor-trait implementation for async-io"
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/Keruspe/reactor-trait"
+homepage = "https://github.com/Keruspe/reactor-trait"
+documentation = "https://docs.rs/async-reactor-trait"
+keywords = ["async", "await", "future", "reactor"]
+categories = ["asynchronous", "concurrency"]
+readme = "README.md"
+
+[dependencies]
+async-io = "^1.3"
+async-trait = "^0.1.42"
+
+[dependencies.reactor-trait]
+version = "^0.0"
+path = ".."
