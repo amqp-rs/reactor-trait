@@ -1,0 +1,26 @@
+[package]
+name = "tokio-reactor-trait"
+version = "0.0.0"
+authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
+description =  "reactor-trait implementation for tokio"
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/Keruspe/reactor-trait"
+homepage = "https://github.com/Keruspe/reactor-trait"
+documentation = "https://docs.rs/tokio-reactor-trait"
+keywords = ["async", "await", "future", "reactor"]
+categories = ["asynchronous", "concurrency"]
+readme = "README.md"
+
+[dependencies]
+async-trait = "^0.1.42"
+futures-io = "^0.3"
+
+[dependencies.tokio]
+version = "^1.0"
+default-features = false
+features = ["net", "rt", "time"]
+
+[dependencies.reactor-trait]
+version = "^0.0"
+path = ".."

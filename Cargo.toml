@@ -17,4 +17,4 @@ async-trait = "^0.1.42"
 futures-io = "^0.3"
 
 [workspace]
-members = [".", "async-reactor-trait"]
+members = [".", "async-reactor-trait", "tokio-reactor-trait"]
