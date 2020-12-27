@@ -7,7 +7,7 @@ use async_trait::async_trait;
 use futures_io::{AsyncRead, AsyncWrite};
 use std::{
     fmt,
-    io::{self, Read, Write, IoSliceMut, IoSlice},
+    io::{self, IoSlice, IoSliceMut, Read, Write},
     time::Duration,
 };
 use sys::IO;
@@ -88,7 +88,10 @@ pub trait Reactor {
 #[cfg(unix)]
 mod sys {
     use crate::IOHandle;
-    use std::{io::{Read, Write}, os::unix::io::{AsRawFd, RawFd}};
+    use std::{
+        io::{Read, Write},
+        os::unix::io::{AsRawFd, RawFd},
+    };
 
     pub trait IO: Read + Write + AsRawFd {}
     impl<H: Read + Write + AsRawFd> IO for H {}
@@ -102,7 +105,10 @@ mod sys {
 
 #[cfg(windows)]
 mod sys {
-    use std::{io::{Read, Write}, os::windows::io::{AsRawSocket, RawSocket}};
+    use std::{
+        io::{Read, Write},
+        os::windows::io::{AsRawSocket, RawSocket},
+    };
 
     pub trait IO: Read + Write + AsRawSocket {}
     impl<H: Read + Write + AsRawSocket> IO for H {}

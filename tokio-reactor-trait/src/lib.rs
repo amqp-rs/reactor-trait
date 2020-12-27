@@ -7,7 +7,7 @@ mod unix {
     use crate::Tokio;
     use async_trait::async_trait;
     use futures_io::{AsyncRead, AsyncWrite};
-    use reactor_trait::{Reactor, IOHandle, AsyncIOHandle};
+    use reactor_trait::{AsyncIOHandle, IOHandle, Reactor};
     use std::{
         io::{self, IoSlice, IoSliceMut, Read, Write},
         pin::Pin,

@@ -1,6 +1,6 @@
 use async_io::{Async, Timer};
 use async_trait::async_trait;
-use reactor_trait::{Reactor, IOHandle, AsyncIOHandle};
+use reactor_trait::{AsyncIOHandle, IOHandle, Reactor};
 use std::{io, time::Duration};
 
 /// Dummy object implementing reactor-trait common interfaces on top of async-io
