@@ -6,15 +6,17 @@ pub struct Tokio;
 mod unix {
     use crate::Tokio;
     use async_trait::async_trait;
+    use futures_core::Stream;
     use futures_io::{AsyncRead, AsyncWrite};
     use reactor_trait::{AsyncIOHandle, IOHandle, Reactor};
     use std::{
         io::{self, IoSlice, IoSliceMut, Read, Write},
         pin::Pin,
         task::{Context, Poll},
-        time::Duration,
+        time::{Duration, Instant},
     };
     use tokio::{io::unix::AsyncFd, runtime::Handle};
+    use tokio_stream::{wrappers::IntervalStream, StreamExt};
 
     #[derive(Debug)]
     pub(super) struct TokioReactor(pub(super) Handle);
@@ -27,6 +29,10 @@ mod unix {
 
         async fn sleep(&self, dur: Duration) {
             tokio::time::sleep(dur).await;
+        }
+
+        fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>> {
+            Box::new(IntervalStream::new(tokio::time::interval(dur)).map(tokio::time::Instant::into_std))
         }
     }
 

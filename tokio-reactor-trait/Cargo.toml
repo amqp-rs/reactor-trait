@@ -14,7 +14,9 @@ readme = "README.md"
 
 [dependencies]
 async-trait = "^0.1.42"
+futures-core = "^0.3"
 futures-io = "^0.3"
+tokio-stream = "^0.1"
 
 [dependencies.tokio]
 version = "^1.0"

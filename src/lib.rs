@@ -4,11 +4,12 @@
 #![warn(missing_docs, missing_debug_implementations, rust_2018_idioms)]
 
 use async_trait::async_trait;
+use futures_core::Stream;
 use futures_io::{AsyncRead, AsyncWrite};
 use std::{
     fmt,
     io::{self, IoSlice, IoSliceMut, Read, Write},
-    time::Duration,
+    time::{Duration, Instant},
 };
 use sys::IO;
 
@@ -83,6 +84,8 @@ pub trait Reactor {
     fn register(&self, socket: IOHandle) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
     /// Sleep for the given duration
     async fn sleep(&self, dur: Duration);
+    /// Stream that yields at every given interval
+    fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>>;
 }
 
 #[cfg(unix)]
