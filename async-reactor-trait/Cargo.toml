@@ -1,6 +1,6 @@
 [package]
 name = "async-reactor-trait"
-version = "0.2.0"
+version = "1.0.0"
 authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "reactor-trait implementation for async-io"
 edition = "2018"
@@ -18,5 +18,5 @@ async-trait = "^0.1.42"
 futures-core = "^0.3"
 
 [dependencies.reactor-trait]
-version = "^0.2"
+version = "^1.0"
 path = ".."
