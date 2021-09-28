@@ -32,7 +32,9 @@ mod unix {
         }
 
         fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>> {
-            Box::new(IntervalStream::new(tokio::time::interval(dur)).map(tokio::time::Instant::into_std))
+            Box::new(
+                IntervalStream::new(tokio::time::interval(dur)).map(tokio::time::Instant::into_std),
+            )
         }
     }
 

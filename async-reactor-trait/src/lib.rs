@@ -2,7 +2,10 @@ use async_io::{Async, Timer};
 use async_trait::async_trait;
 use futures_core::Stream;
 use reactor_trait::{AsyncIOHandle, IOHandle, Reactor};
-use std::{io, time::{Duration, Instant}};
+use std::{
+    io,
+    time::{Duration, Instant},
+};
 
 /// Dummy object implementing reactor-trait common interfaces on top of async-io
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
