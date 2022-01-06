@@ -5,8 +5,8 @@ authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "reactor-trait implementation for async-io"
 edition = "2018"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/Keruspe/reactor-trait"
-homepage = "https://github.com/Keruspe/reactor-trait"
+repository = "https://github.com/amqp-rs/reactor-trait"
+homepage = "https://github.com/amqp-rs/reactor-trait"
 documentation = "https://docs.rs/async-reactor-trait"
 keywords = ["async", "await", "future", "reactor"]
 categories = ["asynchronous", "concurrency"]
@@ -20,3 +20,6 @@ futures-core = "^0.3"
 [dependencies.reactor-trait]
 version = "^1.0"
 path = ".."
+
+[badges]
+maintenance = { status = "actively-developed" }

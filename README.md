@@ -1,7 +1,7 @@
 # reactor-trait
 
 [![API Docs](https://docs.rs/reactor-trait/badge.svg)](https://docs.rs/reactor-trait)
-[![Build status](https://github.com/Keruspe/reactor-trait/workflows/Build%20and%20test/badge.svg)](https://github.com/Keruspe/reactor-trait/actions)
+[![Build status](https://github.com/amqp-rs/reactor-trait/workflows/Build%20and%20test/badge.svg)](https://github.com/amqp-rs/reactor-trait/actions)
 [![Downloads](https://img.shields.io/crates/d/reactor-trait.svg)](https://crates.io/crates/reactor-trait)
 
 A collection of traits to define a common interface across reactors
