@@ -1,6 +1,6 @@
 [package]
 name = "async-reactor-trait"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "reactor-trait implementation for async-io"
 edition = "2018"
