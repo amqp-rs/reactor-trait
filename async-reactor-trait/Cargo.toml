@@ -3,7 +3,7 @@ name = "async-reactor-trait"
 version = "1.0.1"
 authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "reactor-trait implementation for async-io"
-edition = "2018"
+edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/amqp-rs/reactor-trait"
 homepage = "https://github.com/amqp-rs/reactor-trait"
@@ -11,6 +11,7 @@ documentation = "https://docs.rs/async-reactor-trait"
 keywords = ["async", "await", "future", "reactor"]
 categories = ["asynchronous", "concurrency"]
 readme = "README.md"
+rust-version = "1.56.0"
 
 [dependencies]
 async-io = "^1.3"
