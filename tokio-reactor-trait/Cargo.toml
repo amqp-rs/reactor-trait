@@ -1,6 +1,6 @@
 [package]
 name = "tokio-reactor-trait"
-version = "1.0.1"
+version = "1.1.0"
 authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "reactor-trait implementation for tokio"
 edition = "2021"
@@ -25,7 +25,7 @@ default-features = false
 features = ["net", "rt", "time"]
 
 [dependencies.reactor-trait]
-version = "^1.0"
+version = "^1.1"
 path = ".."
 
 [badges]
