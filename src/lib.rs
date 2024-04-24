@@ -1,6 +1,7 @@
 //! A collection of traits to define a common interface across reactors
 
-#![forbid(unsafe_code)]
+// We want to forbid unsafe code but need to unsafe impl for async-io...
+#![allow(unsafe_code)]
 #![warn(missing_docs, missing_debug_implementations, rust_2018_idioms)]
 
 use async_trait::async_trait;
@@ -73,6 +74,9 @@ impl fmt::Debug for IOHandle {
     }
 }
 
+#[cfg(feature = "async_io_safe")]
+unsafe impl async_io::IoSafe for IOHandle {}
+
 /// A trait representing an asynchronous IO handle
 pub trait AsyncIOHandle: AsyncRead + AsyncWrite {}
 impl<IO: AsyncRead + AsyncWrite> AsyncIOHandle for IO {}
@@ -93,15 +97,21 @@ mod sys {
     use crate::IOHandle;
     use std::{
         io::{Read, Write},
-        os::unix::io::{AsRawFd, RawFd},
+        os::unix::io::{AsFd, AsRawFd, BorrowedFd, RawFd},
     };
 
-    pub trait IO: Read + Write + AsRawFd {}
-    impl<H: Read + Write + AsRawFd> IO for H {}
+    pub trait IO: Read + Write + AsFd {}
+    impl<H: Read + Write + AsFd> IO for H {}
+
+    impl AsFd for IOHandle {
+        fn as_fd(&self) -> BorrowedFd<'_> {
+            self.0.as_fd()
+        }
+    }
 
     impl AsRawFd for IOHandle {
         fn as_raw_fd(&self) -> RawFd {
-            self.0.as_raw_fd()
+            self.as_fd().as_raw_fd()
         }
     }
 }
@@ -111,15 +121,21 @@ mod sys {
     use crate::IOHandle;
     use std::{
         io::{Read, Write},
-        os::windows::io::{AsRawSocket, RawSocket},
+        os::windows::io::{AsSocket, BorrowedSocket},
     };
 
-    pub trait IO: Read + Write + AsRawSocket {}
-    impl<H: Read + Write + AsRawSocket> IO for H {}
+    pub trait IO: Read + Write + AsSocket {}
+    impl<H: Read + Write + AsSocket> IO for H {}
+
+    impl AsSocket for IOHandle {
+        fn as_socket(&self) -> BorrowedSocket<'_> {
+            self.0.as_socket()
+        }
+    }
 
     impl AsRawSocket for IOHandle {
         fn as_raw_socket(&self) -> RawSocket {
-            self.0.as_raw_socket()
+            self.as_socket().as_raw_socket()
         }
     }
 }

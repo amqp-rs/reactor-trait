@@ -13,10 +13,18 @@ categories = ["asynchronous", "concurrency"]
 readme = "README.md"
 rust-version = "1.56.0"
 
+[features]
+default       = []
+async_io_safe = ["async-io"]
+
 [dependencies]
 async-trait = "^0.1.42"
 futures-core = "^0.3"
 futures-io = "^0.3"
+
+[dependencies.async-io]
+version  = "^2.0"
+optional = true
 
 [workspace]
 members = [".", "async-reactor-trait", "tokio-reactor-trait"]
