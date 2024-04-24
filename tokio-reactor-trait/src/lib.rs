@@ -15,11 +15,8 @@ mod unix {
         task::{Context, Poll},
         time::{Duration, Instant},
     };
-    use tokio::{io::unix::AsyncFd, runtime::Handle};
+    use tokio::io::unix::AsyncFd;
     use tokio_stream::{wrappers::IntervalStream, StreamExt};
-
-    #[derive(Debug)]
-    pub(super) struct TokioReactor(pub(super) Handle);
 
     #[async_trait]
     impl Reactor for Tokio {
