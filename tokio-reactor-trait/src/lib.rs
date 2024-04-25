@@ -1,23 +1,40 @@
 use async_trait::async_trait;
-use reactor_trait::{AsyncIOHandle, TcpReactor};
+use futures_core::Stream;
+use reactor_trait::{AsyncIOHandle, TcpReactor, TimeReactor};
 use std::{
     io::{self, IoSlice},
     net::SocketAddr,
     pin::Pin,
     task::{Context, Poll},
+    time::{Duration, Instant},
 };
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::net::TcpStream;
+use tokio_stream::{wrappers::IntervalStream, StreamExt};
 
 /// Dummy object implementing reactor-trait common interfaces on top of tokio
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Tokio;
 
-/// A common interface for registering TCP handles in a reactor.
+#[async_trait]
+impl TimeReactor for Tokio {
+    async fn sleep(&self, dur: Duration) {
+        tokio::time::sleep(dur).await;
+    }
+
+    fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>> {
+        Box::new(
+            IntervalStream::new(tokio::time::interval(dur)).map(tokio::time::Instant::into_std),
+        )
+    }
+}
+
 #[async_trait]
 impl TcpReactor for Tokio {
     /// Create a TcpStream by connecting to a remove host
-    async fn connect<A: Into<SocketAddr> + Send>(addr: A) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
+    async fn connect<A: Into<SocketAddr> + Send>(
+        addr: A,
+    ) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
         Ok(Box::new(TcpStreamWrapper(
             TcpStream::connect(addr.into()).await?,
         )))
@@ -68,33 +85,18 @@ impl futures_io::AsyncWrite for TcpStreamWrapper {
 #[cfg(unix)]
 mod unix {
     use crate::Tokio;
-    use async_trait::async_trait;
-    use futures_core::Stream;
     use futures_io::{AsyncRead, AsyncWrite};
     use reactor_trait::{AsyncIOHandle, IOHandle, Reactor};
     use std::{
         io::{self, IoSlice, IoSliceMut, Read, Write},
         pin::Pin,
         task::{Context, Poll},
-        time::{Duration, Instant},
     };
     use tokio::io::unix::AsyncFd;
-    use tokio_stream::{wrappers::IntervalStream, StreamExt};
 
-    #[async_trait]
     impl Reactor for Tokio {
         fn register(&self, socket: IOHandle) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
             Ok(Box::new(AsyncFdWrapper(AsyncFd::new(socket)?)))
-        }
-
-        async fn sleep(&self, dur: Duration) {
-            tokio::time::sleep(dur).await;
-        }
-
-        fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>> {
-            Box::new(
-                IntervalStream::new(tokio::time::interval(dur)).map(tokio::time::Instant::into_std),
-            )
         }
     }
 

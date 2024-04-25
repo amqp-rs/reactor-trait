@@ -83,10 +83,14 @@ pub trait AsyncIOHandle: AsyncRead + AsyncWrite {}
 impl<IO: AsyncRead + AsyncWrite> AsyncIOHandle for IO {}
 
 /// A common interface for registering IO handles in a reactor.
-#[async_trait]
 pub trait Reactor {
     /// Register a synchronous handle, returning an asynchronous one
     fn register(&self, socket: IOHandle) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
+}
+
+/// A common interface for registering timers in a reactor.
+#[async_trait]
+pub trait TimeReactor {
     /// Sleep for the given duration
     async fn sleep(&self, dur: Duration);
     /// Stream that yields at every given interval
