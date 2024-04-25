@@ -10,6 +10,7 @@ use futures_io::{AsyncRead, AsyncWrite};
 use std::{
     fmt,
     io::{self, IoSlice, IoSliceMut, Read, Write},
+    net::SocketAddr,
     time::{Duration, Instant},
 };
 use sys::IO;
@@ -90,6 +91,15 @@ pub trait Reactor {
     async fn sleep(&self, dur: Duration);
     /// Stream that yields at every given interval
     fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>>;
+}
+
+/// A common interface for registering TCP handles in a reactor.
+#[async_trait]
+pub trait TcpReactor {
+    /// Create a TcpStream by connecting to a remove host
+    async fn connect<A: Into<SocketAddr> + Send>(
+        addr: A,
+    ) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
 }
 
 #[cfg(unix)]
