@@ -2,15 +2,13 @@ use async_trait::async_trait;
 use futures_core::Stream;
 use reactor_trait::{AsyncIOHandle, TcpReactor, TimeReactor};
 use std::{
-    io::{self, IoSlice},
+    io,
     net::SocketAddr,
-    pin::Pin,
-    task::{Context, Poll},
     time::{Duration, Instant},
 };
-use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::net::TcpStream;
 use tokio_stream::{wrappers::IntervalStream, StreamExt};
+use tokio_util::compat::TokioAsyncReadCompatExt;
 
 /// Dummy object implementing reactor-trait common interfaces on top of tokio
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -35,50 +33,7 @@ impl TcpReactor for Tokio {
     async fn connect<A: Into<SocketAddr> + Send>(
         addr: A,
     ) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
-        Ok(Box::new(TcpStreamWrapper(
-            TcpStream::connect(addr.into()).await?,
-        )))
-    }
-}
-
-struct TcpStreamWrapper(TcpStream);
-
-impl futures_io::AsyncRead for TcpStreamWrapper {
-    fn poll_read(
-        mut self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        buf: &mut [u8],
-    ) -> Poll<futures_io::Result<usize>> {
-        let mut b = ReadBuf::new(buf);
-        Pin::new(&mut self.0)
-            .poll_read(cx, &mut b)
-            .map(|res| res.map(|()| b.filled().len()))
-    }
-}
-
-impl futures_io::AsyncWrite for TcpStreamWrapper {
-    fn poll_write(
-        mut self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        buf: &[u8],
-    ) -> Poll<futures_io::Result<usize>> {
-        Pin::new(&mut self.0).poll_write(cx, buf)
-    }
-
-    fn poll_write_vectored(
-        mut self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        bufs: &[IoSlice<'_>],
-    ) -> Poll<futures_io::Result<usize>> {
-        Pin::new(&mut self.0).poll_write_vectored(cx, bufs)
-    }
-
-    fn poll_flush(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<futures_io::Result<()>> {
-        Pin::new(&mut self.0).poll_flush(cx)
-    }
-
-    fn poll_close(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<futures_io::Result<()>> {
-        Pin::new(&mut self.0).poll_shutdown(cx)
+        Ok(Box::new(TcpStream::connect(addr.into()).await?.compat()))
     }
 }
 

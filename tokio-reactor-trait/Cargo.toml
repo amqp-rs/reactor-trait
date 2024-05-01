@@ -24,6 +24,11 @@ version = "^1.0"
 default-features = false
 features = ["net", "rt", "time"]
 
+[dependencies.tokio-util]
+version = "^0.7"
+default-features = false
+features = ["compat"]
+
 [dependencies.reactor-trait]
 version = "^1.1"
 path = ".."
