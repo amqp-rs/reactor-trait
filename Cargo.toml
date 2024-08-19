@@ -11,11 +11,11 @@ documentation = "https://docs.rs/reactor-trait"
 keywords = ["async", "await", "future", "executor"]
 categories = ["asynchronous", "concurrency"]
 readme = "README.md"
-rust-version = "1.56.0"
+rust-version = "1.63.0"
 
 [features]
 default       = []
-async_io_safe = ["async-io"]
+async_io_safe = ["dep:async-io"]
 
 [dependencies]
 async-trait = "^0.1.42"
