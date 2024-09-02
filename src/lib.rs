@@ -135,7 +135,7 @@ mod sys {
     use crate::IOHandle;
     use std::{
         io::{Read, Write},
-        os::windows::io::{AsSocket, BorrowedSocket},
+        os::windows::io::{AsRawSocket, AsSocket, BorrowedSocket, RawSocket},
     };
 
     pub trait IO: Read + Write + AsSocket {}
