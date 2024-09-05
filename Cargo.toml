@@ -1,6 +1,6 @@
 [package]
 name = "reactor-trait"
-version = "2.0.0-alpha.1"
+version = "2.0.0-alpha.2"
 authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "A collection of traits to define a common interface across reactors"
 edition = "2021"
