@@ -6,13 +6,24 @@ use std::{
     net::SocketAddr,
     time::{Duration, Instant},
 };
-use tokio::net::TcpStream;
+use tokio::{net::TcpStream, runtime::Handle};
 use tokio_stream::{wrappers::IntervalStream, StreamExt};
 use tokio_util::compat::TokioAsyncReadCompatExt;
 
 /// Dummy object implementing reactor-trait common interfaces on top of tokio
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Tokio;
+#[derive(Debug, Default, Clone)]
+pub struct Tokio(Option<Handle>);
+
+impl Tokio {
+    pub fn with_handle(mut self, handle: Handle) -> Self {
+        self.0 = Some(handle);
+        self
+    }
+
+    pub fn current() -> Self {
+        Self::default().with_handle(Handle::current())
+    }
+}
 
 #[async_trait]
 impl TimeReactor for Tokio {
@@ -51,6 +62,7 @@ mod unix {
 
     impl Reactor for Tokio {
         fn register(&self, socket: IOHandle) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
+            let _enter = self.0.as_ref().map(|handle| handle.enter());
             Ok(Box::new(AsyncFdWrapper(AsyncFd::new(socket)?)))
         }
     }
