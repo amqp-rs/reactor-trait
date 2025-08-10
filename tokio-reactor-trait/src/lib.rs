@@ -28,10 +28,12 @@ impl Tokio {
 #[async_trait]
 impl TimeReactor for Tokio {
     async fn sleep(&self, dur: Duration) {
+        let _enter = self.0.as_ref().map(|handle| handle.enter());
         tokio::time::sleep(dur).await;
     }
 
     fn interval(&self, dur: Duration) -> Box<dyn Stream<Item = Instant>> {
+        let _enter = self.0.as_ref().map(|handle| handle.enter());
         Box::new(
             IntervalStream::new(tokio::time::interval(dur)).map(tokio::time::Instant::into_std),
         )
@@ -44,6 +46,7 @@ impl TcpReactor for Tokio {
     async fn connect<A: Into<SocketAddr> + Send>(
         addr: A,
     ) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
+        let _enter = self.0.as_ref().map(|handle| handle.enter());
         Ok(Box::new(TcpStream::connect(addr.into()).await?.compat()))
     }
 }
