@@ -110,10 +110,10 @@ pub trait TcpReactor {
 /// A common interface for resolving domain name + port to `SocketAddr`
 #[async_trait]
 pub trait AsyncToSocketAddrs {
-    /// Resolve the domain name through DNS and return a `Stream` of `SocketAddr`
+    /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
     async fn to_socket_addrs<I>(
         input: I,
-    ) -> io::Result<Box<dyn Stream<Item = SocketAddr>>>;
+    ) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>>;
 }
 
 #[cfg(unix)]
