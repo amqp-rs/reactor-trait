@@ -106,6 +106,15 @@ pub trait TcpReactor {
     ) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
 }
 
+/// A common interface for resolving domain name + port to `SocketAddr`
+#[async_trait]
+pub trait AsyncToSocketAddrs {
+    /// Resolve the domain name through DNS and return a `Stream` of `SocketAddr`
+    async fn to_socket_addrs<I>(
+        input: I,
+    ) -> io::Result<Box<dyn Stream<Item = SocketAddr>>>;
+}
+
 #[cfg(unix)]
 mod sys {
     use crate::IOHandle;
