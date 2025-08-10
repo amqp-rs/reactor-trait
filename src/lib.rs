@@ -102,6 +102,7 @@ pub trait TimeReactor {
 pub trait TcpReactor {
     /// Create a TcpStream by connecting to a remove host
     async fn connect<A: Into<SocketAddr> + Send>(
+        // FIXME: missing &self
         addr: A,
     ) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
 }
