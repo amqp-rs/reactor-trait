@@ -111,10 +111,7 @@ pub trait TcpReactor {
 #[async_trait]
 pub trait AsyncToSocketAddrs {
     /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
-    async fn to_socket_addrs<H>(
-        host: H,
-        port: u16,
-    ) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>>;
+    async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>>;
 }
 
 #[cfg(unix)]
