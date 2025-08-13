@@ -48,7 +48,7 @@ dependencies = [
 
 [[package]]
 name = "async-reactor-trait"
-version = "2.4.0"
+version = "2.5.0"
 dependencies = [
  "async-io",
  "async-trait",
@@ -326,7 +326,7 @@ dependencies = [
 
 [[package]]
 name = "reactor-trait"
-version = "2.4.0"
+version = "2.5.0"
 dependencies = [
  "async-io",
  "async-trait",
@@ -415,7 +415,7 @@ dependencies = [
 
 [[package]]
 name = "tokio-reactor-trait"
-version = "3.5.0"
+version = "3.6.0"
 dependencies = [
  "async-trait",
  "futures-core",
