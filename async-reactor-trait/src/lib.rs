@@ -33,6 +33,7 @@ impl TimeReactor for AsyncIo {
 impl TcpReactor for AsyncIo {
     /// Create a TcpStream by connecting to a remove host
     async fn connect<A: Into<SocketAddr> + Send>(
+        &self,
         addr: A,
     ) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
         Ok(Box::new(Async::<TcpStream>::connect(addr.into()).await?))

@@ -102,9 +102,9 @@ pub trait TimeReactor {
 /// A common interface for registering TCP handles in a reactor.
 #[async_trait]
 pub trait TcpReactor {
-    /// Create a TcpStream by connecting to a remove host
+    /// Create a TcpStream by connecting to a remote host
     async fn connect<A: Into<SocketAddr> + Send>(
-        // FIXME: missing &self
+        &self,
         addr: A,
     ) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
 }
