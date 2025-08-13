@@ -5,12 +5,13 @@
 #![warn(missing_docs, missing_debug_implementations, rust_2018_idioms)]
 
 use async_trait::async_trait;
+use executor_trait::BlockingExecutor;
 use futures_core::Stream;
 use futures_io::{AsyncRead, AsyncWrite};
 use std::{
     fmt,
     io::{self, IoSlice, IoSliceMut, Read, Write},
-    net::SocketAddr,
+    net::{SocketAddr, ToSocketAddrs},
     time::{Duration, Instant},
 };
 use sys::IO;
@@ -112,6 +113,23 @@ pub trait TcpReactor {
 pub trait AsyncToSocketAddrs {
     /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
     async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>>;
+}
+
+#[async_trait]
+impl<E: BlockingExecutor + Send + Sync, A: ToSocketAddrs + Clone + Send + Sync + 'static> AsyncToSocketAddrs for (E, A) {
+    /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
+    /// For this generic impl, we spawn the `std::net::ToSocketAddrs` impl on a blocking executor
+    async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>> {
+        let (executor, addrs) = self;
+        let addrs = addrs.clone();
+        let (sender, receiver) = flume::bounded(1);
+
+        executor.spawn_blocking(Box::new(move || {
+            sender.send(addrs.to_socket_addrs().map(|addrs| addrs.collect::<Vec<_>>())).unwrap();
+        })).await;
+        let addrs = receiver.recv_async().await.map_err(io::Error::other)??;
+        Ok(Box::new(addrs.into_iter()))
+    }
 }
 
 #[cfg(unix)]
