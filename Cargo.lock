@@ -48,7 +48,7 @@ dependencies = [
 
 [[package]]
 name = "async-reactor-trait"
-version = "2.6.0"
+version = "2.7.0"
 dependencies = [
  "async-io",
  "async-trait",
@@ -326,7 +326,7 @@ dependencies = [
 
 [[package]]
 name = "reactor-trait"
-version = "2.6.0"
+version = "2.7.0"
 dependencies = [
  "async-io",
  "async-trait",
@@ -388,9 +388,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.104"
+version = "2.0.105"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "17b6f705963418cdb9927482fa304bc562ece2fdd4f616084c50b7023b435a40"
+checksum = "7bc3fcb250e53458e712715cf74285c1f889686520d79294a9ef3bd7aa1fc619"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -415,7 +415,7 @@ dependencies = [
 
 [[package]]
 name = "tokio-reactor-trait"
-version = "3.7.0"
+version = "3.8.0"
 dependencies = [
  "async-trait",
  "futures-core",
