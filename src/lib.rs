@@ -113,7 +113,7 @@ pub trait TcpReactor {
 #[async_trait]
 pub trait AsyncToSocketAddrs {
     /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
-    async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>>;
+    async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr> + Send + Sync>>;
 }
 
 #[async_trait]
@@ -124,7 +124,7 @@ where
 {
     /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
     /// For this generic impl, we spawn the `std::net::ToSocketAddrs` impl on a blocking executor
-    async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>> {
+    async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr> + Send + Sync>> {
         let (executor, addrs) = self;
         let addrs = addrs.clone();
         let (sender, receiver) = flume::bounded(1);
