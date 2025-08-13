@@ -12,6 +12,7 @@ use std::{
     fmt,
     io::{self, IoSlice, IoSliceMut, Read, Write},
     net::{SocketAddr, ToSocketAddrs},
+    ops::Deref,
     time::{Duration, Instant},
 };
 use sys::IO;
@@ -116,7 +117,11 @@ pub trait AsyncToSocketAddrs {
 }
 
 #[async_trait]
-impl<E: BlockingExecutor + Send + Sync, A: ToSocketAddrs + Clone + Send + Sync + 'static> AsyncToSocketAddrs for (E, A) {
+impl<E: Deref + Send + Sync, A: ToSocketAddrs + Clone + Send + Sync + 'static> AsyncToSocketAddrs
+    for (E, A)
+where
+    E::Target: BlockingExecutor + Send + Sync,
+{
     /// Resolve the domain name through DNS and return an `Iterator` of `SocketAddr`
     /// For this generic impl, we spawn the `std::net::ToSocketAddrs` impl on a blocking executor
     async fn to_socket_addrs(&self) -> io::Result<Box<dyn Iterator<Item = SocketAddr>>> {
@@ -124,9 +129,17 @@ impl<E: BlockingExecutor + Send + Sync, A: ToSocketAddrs + Clone + Send + Sync +
         let addrs = addrs.clone();
         let (sender, receiver) = flume::bounded(1);
 
-        executor.spawn_blocking(Box::new(move || {
-            sender.send(addrs.to_socket_addrs().map(|addrs| addrs.collect::<Vec<_>>())).unwrap();
-        })).await;
+        executor
+            .spawn_blocking(Box::new(move || {
+                sender
+                    .send(
+                        addrs
+                            .to_socket_addrs()
+                            .map(|addrs| addrs.collect::<Vec<_>>()),
+                    )
+                    .unwrap();
+            }))
+            .await;
         let addrs = receiver.recv_async().await.map_err(io::Error::other)??;
         Ok(Box::new(addrs.into_iter()))
     }
