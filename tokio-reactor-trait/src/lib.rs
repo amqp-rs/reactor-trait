@@ -42,13 +42,10 @@ impl TimeReactor for Tokio {
 #[async_trait]
 impl TcpReactor for Tokio {
     /// Create a TcpStream by connecting to a remove host
-    async fn connect<A: Into<SocketAddr> + Send>(
-        &self,
-        addr: A,
-    ) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
+    async fn connect(&self, addr: SocketAddr) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
         // We cannot do that as EnterGuard is not Send (which makes sense)
         // let _enter = self.0.as_ref().map(|handle| handle.enter());
-        Ok(Box::new(TcpStream::connect(addr.into()).await?.compat()))
+        Ok(Box::new(TcpStream::connect(addr).await?.compat()))
     }
 }
 

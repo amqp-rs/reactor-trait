@@ -32,10 +32,7 @@ impl TimeReactor for AsyncIo {
 #[async_trait]
 impl TcpReactor for AsyncIo {
     /// Create a TcpStream by connecting to a remove host
-    async fn connect<A: Into<SocketAddr> + Send>(
-        &self,
-        addr: A,
-    ) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
-        Ok(Box::new(Async::<TcpStream>::connect(addr.into()).await?))
+    async fn connect(&self, addr: SocketAddr) -> io::Result<Box<dyn AsyncIOHandle + Send>> {
+        Ok(Box::new(Async::<TcpStream>::connect(addr).await?))
     }
 }

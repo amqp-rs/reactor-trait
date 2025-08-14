@@ -103,10 +103,7 @@ pub trait TimeReactor {
 #[async_trait]
 pub trait TcpReactor {
     /// Create a TcpStream by connecting to a remote host
-    async fn connect<A: Into<SocketAddr> + Send>(
-        &self,
-        addr: A,
-    ) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
+    async fn connect(&self, addr: SocketAddr) -> io::Result<Box<dyn AsyncIOHandle + Send>>;
 }
 
 /// A common interface for resolving domain name + port to `SocketAddr`
