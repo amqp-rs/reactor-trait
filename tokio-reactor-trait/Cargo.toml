@@ -1,6 +1,6 @@
 [package]
 name = "tokio-reactor-trait"
-version = "4.1.0"
+version = "4.1.1"
 authors = ["Marc-Antoine Perennou <Marc-Antoine@Perennou.com>"]
 description =  "reactor-trait implementation for tokio"
 edition = "2021"
@@ -30,8 +30,8 @@ default-features = false
 features = ["compat"]
 
 [dependencies.reactor-trait]
-version = "=3.1.0"
+version = "^3.1"
 path = ".."
 
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = { status = "passively-developed" } # use async-rs instead
